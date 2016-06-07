@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Remove Markers</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="floating-panel">
+      <input onclick="clearMarkers();" type="button" value="Hide Markers">
+      <input onclick="showMarkers();" type="button" value="Show All Markers">
+      <input onclick="deleteMarkers();" type="button" value="Delete Markers">
+    </div>
+    <div id="map"></div>
+    <p>Click on the map to add markers.</p>
+    <script>
+      var map;
+      var markers = [];
+      var services;
+
+      function initMap() {
+        var NewYork = {lat: 40.7056, lng: -74.0083};
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: NewYork,
+        });
+
+        map.addListener('click', function(event) {
+          addMarker(event.latLng);
+        });
+        infowindow = new google.maps.InfoWindow();
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch({
+          location: NewYork,
+          radius: 5000,
+          type: ['parking']
+        }, callback);
+
+          addMarker(NewYork);
+      }
+
+      function callback(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+          }
+        }
+      }
+
+      function createMarker(place) {
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location
+        });
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
+        });
+      }
+
+
+      var contentInfo = '<div id="content">'+
+    '<div id="siteNotice">'+
+    '</div>'+
+    '<h1 id="firstHeading" class="firstHeading">Places</h1>'+
+    '<div id="bodyContent">'+
+    '</div>'+
+    '</div>';
+
+      function addMarker(location) {
+        var marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          draggable: true
+        });
+        markers.push(marker);
+        var infoWin = new google.maps.InfoWindow({
+          content: contentInfo
+        });
+        marker.addListener('click', function(){
+        infoWin.open(map, marker);
+      });
+      }
+
+      function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(map);
+        }
+      }
+
+      function clearMarkers() {
+        setMapOnAll(null);
+      }
+
+      function showMarkers() {
+        setMapOnAll(map);
+      }
+
+      function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtxY38dIbtxwoM11-vxvqOsFVDadzWSZI&libraries=places&callback=initMap" async defer></script>
+  </body>
+    <!-- <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtxY38dIbtxwoM11-vxvqOsFVDadzWSZI&callback=initMap">
+    </script> -->
+</html>

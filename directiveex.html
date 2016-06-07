@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Angular Directive Exercises</title>
+    <script src="angular.js"></script>
+
+    <script>
+    var app = angular.module('my-app', []);
+    app.directive('mattsDirective', function(){
+      return {
+        template: '<h2>I made a directive! BooYah!</h2>'
+      }
+    })
+
+    </script>
+  </head>
+  <body ng-app="my-app">
+    <matts-directive></matts-directive>
+  </body>
+</html>

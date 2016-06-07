@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Bootstrap ProgressBar directive</title>
+    <script src="angular.js"></script>
+    <link rel="stylesheet" href="bootstrap.css" media="screen" title="no title" charset="utf-8">
+    <script>
+    var app = angular.module('progress-app', []);
+
+    app.directive('progressBar', function(){
+      return {
+        replace: 'true',
+        templateUrl: 'bootstrapprogressbar.html'
+      }
+    });
+    </script>
+    </head>
+    <body ng-app="progress-app">
+    <progress-bar>{{template}}</progress-bar>
+    </body>
+</html>
